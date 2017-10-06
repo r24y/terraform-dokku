@@ -56,8 +56,8 @@ resource "aws_security_group" "default" {
 
   # App access from anywhere
   ingress {
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -95,30 +95,6 @@ resource "null_resource" "dependencies" {
         host = "${aws_instance.web.public_ip}"
         user = "centos"
         private_key = "${file("~/.ssh/${var.ssh-key}.pem")}"
-    }
-}
-
-resource "null_resource" "application" {
-    depends_on = ["null_resource.dependencies"]
-    connection {
-        type = "ssh"
-        host = "${aws_instance.web.public_ip}"
-        user = "centos"
-        private_key = "${file("~/.ssh/${var.ssh-key}.pem")}"
-    }
-    provisioner "remote-exec" {
-        inline = ["mkdir -p /apps/terraform-node-pm2"]
-    }
-    provisioner "file" {
-        source = "${path.module}/../../index.js"
-        destination = "/apps/terraform-node-pm2/index.js"
-    }
-    provisioner "file" {
-        source = "${path.module}/provision/ecosystem.config.json"
-        destination = "/apps/ecosystem.config.json"
-    }
-    provisioner "remote-exec" {
-        script = "${path.module}/provision/npm-install.sh"
     }
 }
 

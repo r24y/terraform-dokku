@@ -1,4 +1,4 @@
-# terraform-node-pm2
+# terraform-dokku
 
 Make sure your SSH key is saved as `~/.ssh/$IAM_KEY_NAME.pem` and has the correct permissions (400).
 
